@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ABIYAN'S BIRTHDAY PARTY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Parisienne&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --coffee-dark:#2E1D14;
+    --coffee:#4A2E1F;
+    --coffee-mid:#7A5237;
+    --cream:#F7EEDD;
+    --cream-soft:#FBF5EA;
+    --gold:#C9974D;
+    --gold-soft:#E4C58B;
+    --white-warm:#FFFCF7;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{
+    height:100%;
+    background:var(--coffee-dark);
+    font-family:'Jost', sans-serif;
+    color:var(--coffee-dark);
+    overflow-x:hidden;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+
+  .app{
+    max-width:480px;
+    margin:0 auto;
+    min-height:100vh;
+    position:relative;
+    background:var(--cream);
+  }
+
+  /* ===== COVER ===== */
+  #cover{
+    position:fixed;
+    inset:0;
+    max-width:480px;
+    margin:0 auto;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        #8B4513 0px,
+        #8B4513 15px,
+        #A0522D 15px,
+        #A0522D 30px,
+        #CD853F 30px,
+        #CD853F 45px,
+        #8B4513 45px,
+        #8B4513 60px
+      );
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    z-index:50;
+    transition:transform 1s cubic-bezier(.65,0,.35,1), opacity 1s ease;
+    padding:60px 40px;
+    overflow:hidden;
+  }
+
+  .cover-frame{
+    position:absolute;
+    inset:30px;
+    background:#F5F5DC;
+    border-radius:20px;
+    border:4px solid #fff;
+    box-shadow:
+      inset 0 0 0 3px #4A90E2,
+      0 8px 25px rgba(0,0,0,0.15);
+  }
+
+  .cover-frame::before{
+    content:"";
+    position:absolute;
+    inset:-8px;
+    border:3px solid #4A90E2;
+    border-radius:24px;
+  }
+
+  .cover-content{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    z-index:2;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    width:calc(100% - 120px);
+    height:calc(100% - 120px);
+    text-align:center;
+  }
+  #cover.opened{
+    transform:translateY(-100%);
+    opacity:0.4;
+    pointer-events:none;
+  }
+
+  .cover-photo{
+    width:200px;
+    height:200px;
+    border-radius:50%;
+    border:3px solid #fff;
+    box-shadow:0 8px 20px rgba(0,0,0,0.15);
+    object-fit:cover;
+    object-position:center top;
+    margin:0;
+    display:block;
+    flex-shrink:0;
+    position:relative;
+  }
+
+  .eyebrow-cover{
+    font-family:'Jost', sans-serif;
+    letter-spacing:3px;
+    font-size:10px;
+    color:#8B4513;
+    text-transform:uppercase;
+    margin:20px 0 12px 0;
+    opacity:0.8;
+  }
+  .cover-big{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    font-size:32px;
+    letter-spacing:1px;
+    color:#2E1D14;
+    line-height:1.1;
+    margin-bottom:8px;
+  }
+  .cover-big span{color:#8B4513;}
+  .cover-sub{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:14px;
+    color:#6B4226;
+    letter-spacing:0.5px;
+    margin-bottom:24px;
+  }
+
+  .open-btn{
+    border:2px solid #8B4513;
+    background:#8B4513;
+    color:#fff;
+    font-family:'Jost', sans-serif;
+    letter-spacing:2px;
+    font-size:11px;
+    text-transform:uppercase;
+    padding:12px 24px;
+    border-radius:25px;
+    cursor:pointer;
+    transition:all .3s ease;
+  }
+  .open-btn:hover{
+    background:transparent;
+    color:#8B4513;
+  }
+
+  /* Music Player */
+  .music-player{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    z-index:100;
+    background:var(--white-warm);
+    border:2px solid var(--gold);
+    border-radius:50%;
+    width:60px;
+    height:60px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition:all .3s ease;
+    box-shadow:0 4px 15px rgba(0,0,0,0.15);
+  }
+  .music-player:hover{
+    background:var(--gold);
+    transform:scale(1.1);
+  }
+  .music-player svg{
+    width:24px;
+    height:24px;
+    color:var(--coffee-dark);
+    transition:color .3s ease;
+  }
+  .music-player:hover svg{
+    color:var(--white-warm);
+  }
+  .music-player.playing{
+    animation:pulse-music 2s infinite;
+  }
+  @keyframes pulse-music{
+    0%,100%{box-shadow:0 4px 15px rgba(0,0,0,0.15), 0 0 0 0 rgba(201,151,77,0.4);}
+    50%{box-shadow:0 4px 15px rgba(0,0,0,0.15), 0 0 0 8px rgba(201,151,77,0);}
+  }
+
+  /* ===== CONTENT ===== */
+  #content{
+    padding:64px 28px 60px;
+    position:relative;
+  }
+
+  .section{
+    padding:46px 0;
+    border-bottom:1px solid rgba(74,46,31,0.12);
+    opacity:0;
+    transform:translateY(18px);
+    transition:opacity .8s ease, transform .8s ease;
+  }
+  .section.visible{opacity:1; transform:translateY(0);}
+  .section:last-child{border-bottom:none;}
+
+  .eyebrow{
+    font-size:11px;
+    letter-spacing:4px;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:14px;
+    font-weight:500;
+  }
+
+  .greet-name{
+    font-family:'Parisienne', cursive;
+    font-size:36px;
+    color:var(--coffee);
+    margin-bottom:16px;
+  }
+  .lead{
+    font-family:'Cormorant Garamond', serif;
+    font-size:20px;
+    line-height:1.6;
+    color:var(--coffee-mid);
+  }
+  .lead b{color:var(--coffee-dark); font-weight:600;}
+
+  .headline{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    font-size:30px;
+    line-height:1.2;
+    color:var(--coffee-dark);
+    margin-bottom:10px;
+  }
+
+  /* Event cards */
+  .event-card{
+    background:var(--white-warm);
+    border:1px solid rgba(74,46,31,0.14);
+    border-radius:18px;
+    padding:26px 24px;
+    margin-top:22px;
+    position:relative;
+    overflow:hidden;
+  }
+  .event-card::before{
+    content:"";
+    position:absolute;
+    top:-30px; right:-30px;
+    width:90px;height:90px;
+    border-radius:50%;
+    border:1px solid var(--gold-soft);
+    opacity:0.5;
+  }
+  .event-num{
+    font-family:'Cormorant Garamond', serif;
+    font-size:13px;
+    letter-spacing:3px;
+    color:var(--gold);
+    text-transform:uppercase;
+    margin-bottom:6px;
+  }
+  .event-place{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    font-size:26px;
+    color:var(--coffee-dark);
+    margin-bottom:10px;
+  }
+  .event-time{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-size:14px;
+    letter-spacing:1px;
+    color:var(--coffee-mid);
+    background:var(--cream);
+    padding:7px 14px;
+    border-radius:999px;
+    margin-bottom:16px;
+  }
+  .event-time svg{width:14px;height:14px;flex-shrink:0;}
+  
+  .event-philosophy{
+    background:var(--cream-soft);
+    border-radius:12px;
+    padding:16px;
+    margin:16px 0;
+    border-left:3px solid var(--gold);
+    display:none;
+    opacity:0;
+    transform:translateY(-10px);
+    transition:all 0.4s ease;
+  }
+  .event-philosophy.visible{
+    display:block;
+    opacity:1;
+    transform:translateY(0);
+  }
+  .event-philosophy p{
+    font-family:'Jost', sans-serif;
+    font-size:14px;
+    line-height:1.5;
+    color:var(--coffee-mid);
+  }
+  .event-philosophy b{
+    color:var(--coffee-dark);
+    font-weight:600;
+  }
+  .event-philosophy i{
+    color:var(--gold);
+    font-style:italic;
+  }
+  
+  .story-toggle{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:13px;
+    letter-spacing:1px;
+    color:var(--gold);
+    background:transparent;
+    border:1px solid var(--gold);
+    padding:8px 14px;
+    border-radius:20px;
+    cursor:pointer;
+    font-family:'Jost', sans-serif;
+    margin:12px 0;
+    transition:all .3s ease;
+  }
+  .story-toggle:hover{
+    background:var(--gold);
+    color:var(--white-warm);
+  }
+  .story-toggle svg{
+    width:12px;
+    height:12px;
+    transition:transform .3s ease;
+  }
+  .story-toggle.active svg{
+    transform:rotate(180deg);
+  }
+  
+  .map-link{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:13px;
+    letter-spacing:1px;
+    color:var(--coffee-dark);
+    text-decoration:none;
+    border:none;
+    border-bottom:1px solid var(--gold);
+    background:transparent;
+    padding:0 0 2px 0;
+    font-family:'Jost', sans-serif;
+    cursor:pointer;
+  }
+  .map-link svg{width:13px;height:13px;}
+
+  /* timeline connector */
+  .timeline-wrap{position:relative;}
+  .timeline-line{
+    position:absolute;
+    left:11px;
+    top:56px;
+    bottom:56px;
+    width:1px;
+    background:repeating-linear-gradient(to bottom, var(--gold-soft) 0 4px, transparent 4px 9px);
+  }
+  .event-card{margin-left:26px;}
+  .event-dot{
+    position:absolute;
+    left:0; top:26px;
+    width:23px;height:23px;
+    border-radius:50%;
+    background:var(--coffee-dark);
+    border:3px solid var(--cream);
+    box-shadow:0 0 0 1px var(--gold-soft);
+  }
+
+  /* dress code */
+  .dress-scenario{
+    margin-top:22px;
+  }
+  .scenario-item{
+    background:var(--white-warm);
+    border:1px solid rgba(74,46,31,0.14);
+    border-radius:16px;
+    padding:20px;
+    margin-bottom:16px;
+    position:relative;
+  }
+  .scenario-item.special{
+    background:var(--cream-soft);
+    border-left:4px solid var(--gold);
+  }
+  .scenario-header{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    margin-bottom:12px;
+  }
+  .scenario-num{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    font-size:18px;
+    color:var(--coffee-dark);
+  }
+  .scenario-place{
+    font-family:'Jost', sans-serif;
+    font-size:13px;
+    color:var(--coffee-mid);
+    opacity:0.8;
+  }
+  .scenario-content{
+    
+  }
+  .scenario-theme{
+    font-family:'Jost', sans-serif;
+    font-size:15px;
+    color:var(--coffee-dark);
+    margin-bottom:8px;
+  }
+  .scenario-theme strong{
+    color:var(--gold);
+    font-weight:600;
+  }
+  .scenario-desc{
+    font-family:'Cormorant Garamond', serif;
+    font-size:16px;
+    line-height:1.5;
+    color:var(--coffee-mid);
+  }
+  .scenario-desc strong{
+    color:var(--coffee-dark);
+    font-weight:600;
+  }
+
+  .dress-row-mini{
+    display:flex;
+    gap:12px;
+    margin-top:16px;
+  }
+  .swatch-mini{
+    flex:1;
+    border-radius:12px;
+    padding:16px 12px;
+    text-align:center;
+    border:1px solid rgba(74,46,31,0.1);
+    background:rgba(255,255,255,0.5);
+  }
+  .swatch-mini .swatch-chip{
+    width:32px;height:32px;
+    border-radius:50%;
+    margin:0 auto 8px;
+    border:1px solid rgba(0,0,0,0.08);
+  }
+  .chip-black{background:#2E1D14; border:1px solid rgba(0,0,0,0.2);}
+  .swatch-mini .swatch-label{
+    font-size:10px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    color:var(--coffee-mid);
+    margin-bottom:2px;
+  }
+  .swatch-mini .swatch-name{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    font-size:14px;
+    color:var(--coffee-dark);
+  }
+
+  .kalcer-note{
+    background:rgba(201,151,77,0.1);
+    border:2px dashed var(--gold-soft);
+    border-radius:16px;
+    padding:16px;
+    margin-top:18px;
+    text-align:center;
+  }
+  .kalcer-note p{
+    font-family:'Jost', sans-serif;
+    font-size:15px;
+    line-height:1.5;
+    color:var(--coffee-mid);
+  }
+  .kalcer-note strong{
+    color:var(--coffee-dark);
+    font-weight:600;
+  }
+  .kalcer-text{
+    font-family:'Jost', sans-serif !important;
+    font-size:16px !important;
+    color:#D32F2F !important;
+    font-weight:700 !important;
+    letter-spacing:0.5px;
+  }
+
+  .dress-row{
+    display:flex;
+    gap:16px;
+    margin-top:22px;
+  }
+  .swatch{
+    flex:1;
+    border-radius:16px;
+    padding:22px 14px;
+    text-align:center;
+    border:1px solid rgba(74,46,31,0.14);
+  }
+  .swatch-chip{
+    width:38px;height:38px;
+    border-radius:50%;
+    margin:0 auto 12px;
+    border:1px solid rgba(0,0,0,0.08);
+  }
+  .chip-brown{background:#6B4226;}
+  .chip-white{background:#FFFDF9; box-shadow:inset 0 0 0 1px rgba(0,0,0,0.08);}
+  .swatch-label{
+    font-size:11px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--coffee-mid);
+    margin-bottom:4px;
+  }
+  .swatch-name{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    font-size:17px;
+    color:var(--coffee-dark);
+  }
+
+  /* countdown */
+  .countdown{
+    display:flex;
+    gap:10px;
+    margin-top:24px;
+  }
+  .cd-box{
+    flex:1;
+    background:var(--coffee-dark);
+    border-radius:14px;
+    text-align:center;
+    padding:16px 4px;
+  }
+  .cd-num{
+    font-family:'Cormorant Garamond', serif;
+    font-weight:600;
+    font-size:26px;
+    color:var(--white-warm);
+    line-height:1;
+  }
+  .cd-label{
+    font-size:9px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+    margin-top:6px;
+  }
+
+  /* closing */
+  .closing{
+    text-align:center;
+    padding-top:10px;
+  }
+  .closing .cover-title{color:var(--coffee); font-size:26px; margin-bottom:14px;}
+  .closing .lead{margin-bottom:8px;}
+  .signoff{
+    font-family:'Parisienne', cursive;
+    font-size:24px;
+    color:var(--gold);
+    margin-top:18px;
+  }
+  .footer-note{
+    text-align:center;
+    font-size:11px;
+    letter-spacing:1.5px;
+    color:var(--coffee-mid);
+    opacity:0.6;
+    margin-top:40px;
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- COVER -->
+  <div id="cover">
+    <div class="cover-frame"></div>
+    <div class="cover-content">
+      <img src="foto.png" alt="Foto" class="cover-photo">
+      <div class="eyebrow-cover">A special day for someone special</div>
+      <div class="cover-big">The Day You Were Born:<br><span>Abiyan's</span> Day</div>
+      <div class="cover-sub">Mari rayakan hari bahagianya bersama</div>
+      <button class="open-btn" id="openBtn" type="button">Masuk ke Hari Bahagiamu</button>
+    </div>
+  </div>
+
+  <!-- Music Player -->
+  <div class="music-player" id="musicPlayer">
+    <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M8 5v14l11-7z"/>
+    </svg>
+    <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none;">
+      <path d="M6 4h4v16H6zM14 4h4v16h-4z"/>
+    </svg>
+  </div>
+
+  <!-- Audio Element -->
+  <audio id="backgroundMusic" preload="auto">
+    <!-- Local file Kunto Aji - Saudade untuk GitHub/Vercel deployment -->
+    <source src="Kunto_Aji_-_Saudade_(mp3.pm).mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- CONTENT -->
+  <div id="content">
+
+    <div class="section" id="s1">
+      <div class="eyebrow">Untuk Kamu Cinta Semesta Hatiku</div>
+      <div class="greet-name">Halo, Abang...</div>
+      <p class="lead">Selamat ulang tahun ya! Hari ini, <b>14 Juli 2026</b>, aku bersyukur banget kamu lahir ke dunia. Maaf ya kalau hari ini aku belum bisa nemenin di samping kamu. Sebagai gantinya, aku udah siapin hari khusus buat kita ngerayain momen ini bareng-bareng di tanggal <b>18 Juli 2026</b> nanti.</p>
+      
+      <p class="lead">Asal kamu tahu, entah di hari yang berat atau lagi seneng, aku selalu diam-diam sisipkan nama kamu di setiap doaku. Semoga semua niat dan doa baikmu selalu dipermudah jalannya, ya. Semoga di usia <b>24 tahun</b> ini, kamu bisa buka lembaran baru yang jauh lebih bahagia, makin mantap, dan selalu bawa kebahagiaan buat diri kamu sendiri dan orang-orang di sekitar. Aku selalu berdoa semoga kamu tumbuh jadi orang yang selalu bikin bangga setiap harinya, Sayang.</p>
+      
+      <p class="lead">Lewat undangan kecil ini, aku mau ajak kamu seru-seruan bareng aku di beberapa tempat yang udah aku siapin dari <b>H-1 BULAN LOH HAHAHA</b>. Doain semoga rencana aku ini lancar dan bisa bikin kamu nyengir ya, Bang.</p>
+      
+      <p class="lead" style="margin-top: 20px; font-style: italic;">Sampai ketemu hari Sabtu nanti!</p>
+    </div>
+
+    <div class="section" id="s2">
+      <div class="eyebrow">Rangkaian Acara</div>
+      <div class="headline">Dua tempat,<br>satu hari spesial.</div>
+
+      <div class="timeline-wrap">
+        <div class="timeline-line"></div>
+
+        <div style="position:relative;">
+          <div class="event-dot"></div>
+          <div class="event-card">
+            <div class="event-num">Acara Pertama</div>
+            <div class="event-place">Kopi Kamu Wijaya</div>
+            <div class="event-time">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+              12.00 &ndash; 14.00 WIB
+            </div>
+            
+            <button type="button" class="story-toggle" data-target="story1">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6,9 12,15 18,9"></polyline>
+              </svg>
+              Kenapa di sini?
+            </button>
+            
+            <div class="event-philosophy" id="story1">
+              <p><b>Kenapa di sini?</b> Karena di sana ada anak-anak spesial (down syndrome) yang kerja dengan keren, aku mau di hari ulang tahunmu ini kita bisa sambil <i>reminder</i> diri buat lebih bersyukur sama apa yang udah kita punya ya, Sayang.</p>
+              
+              <p style="margin-top: 12px; font-weight: 600; color: var(--coffee-dark);">P.S. AWAS YA, PLIS JANGAN BERANI KETAWA-KETAWA KAMU DISANA!!! Jaga sikap, Abang!</p>
+            </div>
+            
+            <br>
+            <button type="button" class="map-link maps-btn" data-url="https://www.google.com/maps/search/?api=1&query=Kopi+Kamu+Wijaya">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+              Buka di Maps
+            </button>
+          </div>
+        </div>
+
+        <div style="position:relative; margin-top:34px;">
+          <div class="event-dot"></div>
+          <div class="event-card">
+            <div class="event-num">Acara Kedua</div>
+            <div class="event-place">Subo Family</div>
+            <div class="event-time">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+              16.00 &ndash; 18.00 WIB
+            </div>
+            
+            <button type="button" class="story-toggle" data-target="story2">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6,9 12,15 18,9"></polyline>
+              </svg>
+              Lihat Ceritanya
+            </button>
+            
+            <div class="event-philosophy" id="story2">
+              <p>Nah, kalau ini <i>hidden gem</i> yang tiba-tiba lewat di TikTok ketika aku lagi cari tempat dinner apa ya yang ngga itu-itu mulu, dan ketika muncul tempat unik ini aku langsung mikir: <i>"We will love this place soooo much, beybi!"</i>. Ini tempat di mana kamu bisa <i>play vinyl</i> sepuas yang kamu mau. Aku juga udah siapin spot yang "bismillah" bisa deket banget sama <i>turntable</i>-nya!</p>
+              
+              <p style="margin-top: 12px; font-weight: 600; color: var(--coffee-dark);"><i>BENERAN KAMU PASTI SENENG SIH HAHAHAHAHA! Plis puji aku sekarang, karena aku pinter nyari tempat di JAKARTA!. JAKARTA LOH INI...</i></p>
+            </div>
+            
+            <br>
+            <button type="button" class="map-link maps-btn" data-url="https://goo.gl/maps/gywj5eMNkBJR1h4o9">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+              Buka di Maps
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="s3">
+      <div class="eyebrow">Dress Code</div>
+      <div class="headline">Biar lusyu, ini skenario<br>baju kita ya, Bang:</div>
+      
+      <div class="dress-scenario">
+        <div class="scenario-item">
+          <div class="scenario-header">
+            <div class="scenario-num">Acara Pertama</div>
+            <div class="scenario-place">(Kopi Kamu Wijaya)</div>
+          </div>
+          <div class="scenario-content">
+            <p class="scenario-theme">Tema: <strong>Hitam & Cokelat/Hitam</strong></p>
+            <p class="scenario-desc">Kita pakai yang santai. Abang pakai baju yang nyaman dari rumah, aku juga pakai ini dari Bandung.</p>
+            
+            <div class="dress-row-mini">
+              <div class="swatch-mini">
+                <div class="swatch-chip chip-black"></div>
+                <div class="swatch-label">Hitam</div>
+              </div>
+              <div class="swatch-mini">
+                <div class="swatch-chip chip-brown"></div>
+                <div class="swatch-label">Coklat</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="scenario-item">
+          <div class="scenario-header">
+            <div class="scenario-num">Acara Kedua</div>
+            <div class="scenario-place">(Subo Family)</div>
+          </div>
+          <div class="scenario-content">
+            <p class="scenario-theme">Dresscode Utama: <strong>Casual Japanese Style</strong></p>
+            <p class="scenario-theme" style="margin-top: 8px; font-size: 14px;">(<strong>Atasan Putih & Bawahan Cokelat</strong>)</p>
+            <p class="scenario-desc">Sehabis jam 3 kita taruh barang di hotel, kita ganti ke dresscode utama.</p>
+            
+            <div class="dress-row-mini">
+              <div class="swatch-mini">
+                <div class="swatch-chip chip-white"></div>
+                <div class="swatch-label">Atasan</div>
+                <div class="swatch-name">Putih</div>
+              </div>
+              <div class="swatch-mini">
+                <div class="swatch-chip chip-brown"></div>
+                <div class="swatch-label">Bawahan</div>
+                <div class="swatch-name">Coklat</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      
+      <div class="kalcer-note">
+        <p>Karena di acara ini Abang adalah pemeran utamanya, Abang harus pakai <strong>Docmart</strong> dan <strong>slayer</strong> ya! Aku nanti bakal menyesuaikan pakai <strong>flatshoes</strong> dan <strong>slayer</strong> juga biar kita makin <span class="kalcer-text">KALCER SKENA ABIEZZZZZ YUHU</span>.</p>
+      </div>
+    </div>
+
+    <div class="section" id="s4">
+      <div class="eyebrow">Menuju Hari-H</div>
+      <div class="headline">Hitung mundur ke<br>18 Juli 2026.</div>
+      <div class="countdown" id="countdown">
+        <div class="cd-box"><div class="cd-num" id="cd-days">00</div><div class="cd-label">Hari</div></div>
+        <div class="cd-box"><div class="cd-num" id="cd-hours">00</div><div class="cd-label">Jam</div></div>
+        <div class="cd-box"><div class="cd-num" id="cd-mins">00</div><div class="cd-label">Menit</div></div>
+        <div class="cd-box"><div class="cd-num" id="cd-secs">00</div><div class="cd-label">Detik</div></div>
+      </div>
+    </div>
+
+    <div class="section closing" id="s5">
+      <div class="cover-title">Ditunggu ya, Abang!</div>
+      <p class="lead">Gak sabar seru-seruan bareng dari siang sampai sore nanti. Pokoknya semuanya bakal jauh lebih seru dari yang kamu bayangin hari ini. <b>MOHON KERJASAMA YANG BAIK LOH YA.</b></p>
+      <div class="signoff"><i>See you</i> tanggal 18 Juli nanti, Abang!</div>
+    </div>
+
+    <div class="footer-note">ABIYAN &middot; 18 JULI 2026</div>
+
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  // Open invitation
+  var openBtn = document.getElementById('openBtn');
+  if (openBtn) {
+    openBtn.addEventListener('click', function () {
+      document.getElementById('cover').classList.add('opened');
+      document.body.style.overflowY = 'auto';
+      
+      // Auto-play music when invitation is opened
+      tryPlayMusic();
+    });
+  }
+
+  // Music Player functionality
+  var musicPlayer = document.getElementById('musicPlayer');
+  var backgroundMusic = document.getElementById('backgroundMusic');
+  var playIcon = document.getElementById('playIcon');
+  var pauseIcon = document.getElementById('pauseIcon');
+  var isPlaying = false;
+
+  // Music Player functionality
+  var musicPlayer = document.getElementById('musicPlayer');
+  var backgroundMusic = document.getElementById('backgroundMusic');
+  var playIcon = document.getElementById('playIcon');
+  var pauseIcon = document.getElementById('pauseIcon');
+  var isPlaying = false;
+
+  function tryPlayMusic() {
+    if (backgroundMusic && !isPlaying) {
+      // Debug: Check if audio can load
+      console.log('Trying to play music...');
+      console.log('Audio source:', backgroundMusic.currentSrc);
+      
+      backgroundMusic.play().then(function() {
+        console.log('Music started successfully');
+        isPlaying = true;
+        musicPlayer.classList.add('playing');
+        playIcon.style.display = 'none';
+        pauseIcon.style.display = 'block';
+      }).catch(function(error) {
+        console.log('Autoplay prevented or failed:', error);
+        // Show music button even if autoplay fails
+        musicPlayer.style.display = 'flex';
+      });
+    }
+  }
+
+  function toggleMusic() {
+    if (!backgroundMusic) {
+      console.log('No audio element found');
+      return;
+    }
+    
+    console.log('Toggle music clicked. Current state:', isPlaying);
+    console.log('Audio readyState:', backgroundMusic.readyState);
+    console.log('Audio currentSrc:', backgroundMusic.currentSrc);
+    
+    if (isPlaying) {
+      backgroundMusic.pause();
+      isPlaying = false;
+      musicPlayer.classList.remove('playing');
+      playIcon.style.display = 'block';
+      pauseIcon.style.display = 'none';
+      console.log('Music paused');
+    } else {
+      backgroundMusic.play().then(function() {
+        isPlaying = true;
+        musicPlayer.classList.add('playing');
+        playIcon.style.display = 'none';
+        pauseIcon.style.display = 'block';
+        console.log('Music started');
+      }).catch(function(error) {
+        console.log('Play failed:', error);
+        alert('Musik tidak bisa diputar. Cek koneksi internet atau coba refresh halaman.');
+      });
+    }
+  }
+
+  // Music player click handler
+  if (musicPlayer) {
+    musicPlayer.addEventListener('click', toggleMusic);
+  }
+
+  // Audio event listeners for debugging
+  if (backgroundMusic) {
+    backgroundMusic.addEventListener('loadstart', function() {
+      console.log('Audio: Loading started');
+    });
+    
+    backgroundMusic.addEventListener('canplay', function() {
+      console.log('Audio: Can start playing');
+    });
+    
+    backgroundMusic.addEventListener('error', function(e) {
+      console.log('Audio error:', e);
+      console.log('Error code:', backgroundMusic.error ? backgroundMusic.error.code : 'unknown');
+    });
+    
+    backgroundMusic.addEventListener('ended', function() {
+      console.log('Audio ended, restarting...');
+      this.currentTime = 0;
+      this.play();
+    });
+    
+    // Set volume (0.0 to 1.0)
+    backgroundMusic.volume = 0.3;
+  }
+
+  // Maps buttons
+  var mapsBtns = document.querySelectorAll('.maps-btn');
+  mapsBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var url = btn.getAttribute('data-url');
+      if (url) { window.open(url, '_blank'); }
+    });
+  });
+
+  // Reveal sections on scroll
+  var sections = document.querySelectorAll('.section');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { entry.target.classList.add('visible'); }
+      });
+    }, { threshold: 0.15 });
+    sections.forEach(function (s) { io.observe(s); });
+  } else {
+    sections.forEach(function (s) { s.classList.add('visible'); });
+  }
+
+  // Story toggle functionality
+  var storyToggles = document.querySelectorAll('.story-toggle');
+  storyToggles.forEach(function (toggle) {
+    toggle.addEventListener('click', function () {
+      var targetId = toggle.getAttribute('data-target');
+      var story = document.getElementById(targetId);
+      
+      if (story.classList.contains('visible')) {
+        // Hide story
+        story.classList.remove('visible');
+        toggle.classList.remove('active');
+        setTimeout(function() {
+          story.style.display = 'none';
+        }, 400);
+      } else {
+        // Show story
+        story.style.display = 'block';
+        setTimeout(function() {
+          story.classList.add('visible');
+          toggle.classList.add('active');
+        }, 10);
+      }
+    });
+  });
+
+  // Countdown to 18 July 2026, 12:00 WIB (UTC+7)
+  var target = new Date('2026-07-18T12:00:00+07:00').getTime();
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function tick() {
+    var diff = target - Date.now();
+    if (diff < 0) diff = 0;
+    var d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    var h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    var m = Math.floor((diff / (1000 * 60)) % 60);
+    var s = Math.floor((diff / 1000) % 60);
+    document.getElementById('cd-days').textContent = pad(d);
+    document.getElementById('cd-hours').textContent = pad(h);
+    document.getElementById('cd-mins').textContent = pad(m);
+    document.getElementById('cd-secs').textContent = pad(s);
+  }
+  tick();
+  setInterval(tick, 1000);
+
+});
+</script>
+
+</body>
+</html>
